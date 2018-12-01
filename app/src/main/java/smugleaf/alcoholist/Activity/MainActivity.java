@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -62,6 +63,21 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        Switch firstSwitch = findViewById(R.id.toggle_first);
+        firstSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(MainActivity.this, "First switch on: " + isChecked, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Switch secondSwitch = findViewById(R.id.toggle_second);
+        secondSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(MainActivity.this, "Second switch on: " + isChecked, Toast.LENGTH_SHORT).show();
+            }
+        });
 //        NavigationView navigationView = findViewById(R.id.nav_view);
 //        navigationView.setNavigationItemSelectedListener(
 //                new NavigationView.OnNavigationItemSelectedListener() {
