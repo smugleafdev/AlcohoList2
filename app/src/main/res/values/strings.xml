@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">AlcohoList</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="array_technology">
+        <item>Android</item>
+        <item>Java</item>
+        <item>Php</item>
+        <item>Hadoop</item>
+        <item>Sap</item>
+        <item>Python</item>
+        <item>Ajax</item>
+        <item>Ruby</item>
+        <item>Perl</item>
+        <item>Amethyst</item>
+    </string-array>
 </resources>
