@@ -1,5 +1,6 @@
 package smugleaf.alcoholist.Activity;
 
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -20,12 +21,13 @@ import smugleaf.alcoholist.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    DrawerLayout mDrawerLayout;
+    DrawerLayout drawerLayout;
     ListView listView;
     String[] listItem;
     FloatingActionButton fab;
     Switch firstSwitch;
     Switch secondSwitch;
+    NfcAdapter nfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
         setupDrawerLayout();
         setupSwitches();
         setupFloatingActionButton();
+        setupNfcAdapter();
+    }
+
+    private void setupNfcAdapter() {
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if (nfcAdapter == null) {
+            toast("This device doesn't support NFC.");
+        }
     }
 
     private void setupSwitches() {
@@ -50,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         firstSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(MainActivity.this, "First switch on: " + isChecked, Toast.LENGTH_SHORT).show();
+                toast("First switch on: " + isChecked);
             }
         });
 
@@ -58,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         secondSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(MainActivity.this, "Second switch on: " + isChecked, Toast.LENGTH_SHORT).show();
+                toast("Second switch on: " + isChecked);
             }
         });
     }
@@ -69,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDrawerLayout() {
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mDrawerLayout.addDrawerListener(drawerListener);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout.addDrawerListener(drawerListener);
     }
 
     private void setupListView() {
@@ -82,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast.makeText(MainActivity.this, adapter.getItem(position), Toast.LENGTH_SHORT).show();
+                toast(adapter.getItem(position));
             }
         });
     }
@@ -108,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
 
@@ -120,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-            Toast.makeText(MainActivity.this, "Implement action", Toast.LENGTH_SHORT).show();
+            toast("Implement action");
         }
     };
 
@@ -147,4 +158,8 @@ public class MainActivity extends AppCompatActivity {
             // Respond when the drawer motion state changes
         }
     };
+
+    private void toast(String string) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+    }
 }
