@@ -20,10 +20,12 @@ import smugleaf.alcoholist.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DrawerLayout mDrawerLayout;
-
+    DrawerLayout mDrawerLayout;
     ListView listView;
     String[] listItem;
+    FloatingActionButton fab;
+    Switch firstSwitch;
+    Switch secondSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,41 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        setupListView();
+        setupDrawerLayout();
+        setupSwitches();
+        setupFloatingActionButton();
+    }
+
+    private void setupSwitches() {
+        firstSwitch = findViewById(R.id.toggle_first);
+        firstSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(MainActivity.this, "First switch on: " + isChecked, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        secondSwitch = findViewById(R.id.toggle_second);
+        secondSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Toast.makeText(MainActivity.this, "Second switch on: " + isChecked, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setupFloatingActionButton() {
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(fabClickListener);
+    }
+
+    private void setupDrawerLayout() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout.addDrawerListener(drawerListener);
+    }
+
+    private void setupListView() {
         listView = findViewById(R.id.listView);
         listItem = getResources().getStringArray(R.array.array_technology);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -46,59 +83,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Toast.makeText(MainActivity.this, adapter.getItem(position), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mDrawerLayout.addDrawerListener(
-                new DrawerLayout.DrawerListener() {
-                    @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset) {
-                        // Respond when the drawer's position changes
-                    }
-
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
-                        // Respond when the drawer is opened
-//                        Toast.makeText(MainActivity.this, "onDrawerOpened", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-                        // Respond when the drawer is closed
-//                        Toast.makeText(MainActivity.this, "onDrawerCloser", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onDrawerStateChanged(int newState) {
-                        // Respond when the drawer motion state changes
-                    }
-                }
-        );
-
-        Switch firstSwitch = findViewById(R.id.toggle_first);
-        firstSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(MainActivity.this, "First switch on: " + isChecked, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Switch secondSwitch = findViewById(R.id.toggle_second);
-        secondSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(MainActivity.this, "Second switch on: " + isChecked, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                Toast.makeText(MainActivity.this, "Implement action", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -131,4 +115,36 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    View.OnClickListener fabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+            Toast.makeText(MainActivity.this, "Implement action", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    DrawerLayout.DrawerListener drawerListener = new DrawerLayout.SimpleDrawerListener() {
+        @Override
+        public void onDrawerSlide(View drawerView, float slideOffset) {
+            // Respond when the drawer's position changes
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            // Respond when the drawer is opened
+//                        Toast.makeText(MainActivity.this, "onDrawerOpened", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+            // Respond when the drawer is closed
+//                        Toast.makeText(MainActivity.this, "onDrawerCloser", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            // Respond when the drawer motion state changes
+        }
+    };
 }
