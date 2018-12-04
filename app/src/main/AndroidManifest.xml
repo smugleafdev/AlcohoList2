@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="smugleaf.alcoholist">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.nfc" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,7 +35,13 @@
                     android:scheme="http"  />
                 <!--TODO-->
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
+        <activity android:name=".Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity"/>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package smugleaf.alcoholist.Activity;
 
+import android.content.Intent;
+import android.graphics.Point;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,8 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
+
+import smugleaf.alcoholist.Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity;
 import smugleaf.alcoholist.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Switch firstSwitch;
     Switch secondSwitch;
     NfcAdapter nfcAdapter;
+    TextView result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        result = findViewById(R.id.nfc_result);
 
         setupListView();
         setupDrawerLayout();
@@ -132,8 +142,30 @@ public class MainActivity extends AppCompatActivity {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
             toast("Implement action");
+
+            Intent intent = new Intent(MainActivity.this, BarcodeCaptureActivity.class);
+            startActivityForResult(intent, 1);
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode b = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    Point[] p = b.cornerPoints;
+                    result.setText(b.displayValue);
+                } else {
+                    result.setText("NO BARCODE CAPTURED");
+                }
+            } else {
+                toast("ERROR");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     DrawerLayout.DrawerListener drawerListener = new DrawerLayout.SimpleDrawerListener() {
         @Override

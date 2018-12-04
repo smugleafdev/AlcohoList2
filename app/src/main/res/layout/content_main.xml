@@ -23,10 +23,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/paste_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paste result: " />
+
+        <TextView
+            android:id="@+id/paste_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/paste_label"
+            android:text="Nothing saved yet (NOT YET IMPLEMENTED)" />
+
+        <TextView
+            android:id="@+id/nfc_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/paste_label"
+            android:text="NFC result: " />
+
+        <TextView
+            android:id="@+id/nfc_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/paste_label"
+            android:layout_toRightOf="@id/nfc_label"
+            android:text="Nothing saved yet (NOT YET IMPLEMENTED)" />
+
+        <TextView
+            android:id="@+id/qr_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nfc_label"
+            android:text="QR result: " />
+
+        <TextView
+            android:id="@+id/qr_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nfc_label"
+            android:layout_toRightOf="@id/qr_label"
+            android:text="Nothing saved yet (NOT YET IMPLEMENTED)" />
+
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:layout_below="@id/qr_label" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
