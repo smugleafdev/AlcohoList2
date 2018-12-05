@@ -68,12 +68,10 @@
             app:layout_constraintStart_toEndOf="@id/nfc_label"
             app:layout_constraintTop_toTopOf="@id/nfc_label" />
 
-        <!--TODO: Make the listview line up properly below qr_label-->
-
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/nfc_label" />
 
@@ -82,31 +80,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:fabSize="mini"
             app:layout_constraintBottom_toTopOf="@id/fabQr"
             app:layout_constraintEnd_toEndOf="@id/fabQr"
             app:layout_constraintStart_toStartOf="@id/fabQr"
-            app:srcCompat="@android:drawable/ic_media_rew" />
+            app:srcCompat="@drawable/ic_nfc" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabQr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:fabSize="mini"
             app:layout_constraintBottom_toTopOf="@id/fabPaste"
             app:layout_constraintEnd_toEndOf="@id/fabPaste"
             app:layout_constraintStart_toStartOf="@id/fabPaste"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:srcCompat="@drawable/ic_qr" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabPaste"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:fabSize="mini"
             app:layout_constraintBottom_toTopOf="@id/fab"
             app:layout_constraintEnd_toEndOf="@id/fab"

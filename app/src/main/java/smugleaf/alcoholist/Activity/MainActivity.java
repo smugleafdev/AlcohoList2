@@ -1,5 +1,7 @@
 package smugleaf.alcoholist.Activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Point;
 import android.nfc.NfcAdapter;
@@ -96,6 +98,32 @@ public class MainActivity extends AppCompatActivity {
         fabPaste.setOnClickListener(fabClickListener);
         fabQr.setOnClickListener(fabClickListener);
         fabNfc.setOnClickListener(fabClickListener);
+
+        fabPaste.addOnHideAnimationListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation, boolean isReverse) {
+                animation.setStartDelay(100);
+            }
+        });
+        fabQr.addOnHideAnimationListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation, boolean isReverse) {
+                animation.setStartDelay(50);
+            }
+        });
+
+        fabQr.addOnShowAnimationListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation, boolean isReverse) {
+                animation.setStartDelay(50);
+            }
+        });
+        fabNfc.addOnShowAnimationListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation, boolean isReverse) {
+                animation.setStartDelay(100);
+            }
+        });
     }
 
     private void setupDrawerLayout() {
@@ -194,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
     private void showFabMenu() {
         isFabOpen = true;
 
-        // TODO: Stagger animations for material design
         fabPaste.show();
         fabQr.show();
         fabNfc.show();
@@ -203,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
     private void closeFabMenu() {
         isFabOpen = false;
 
-        // TODO: Stagger animations for material design
         fabPaste.hide();
         fabQr.hide();
         fabNfc.hide();
