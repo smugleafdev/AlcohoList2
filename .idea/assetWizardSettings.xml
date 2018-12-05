@@ -28,9 +28,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_menu" />
-                            <entry key="sourceFile" value="C:\Users\Theseus" />
+                            <entry key="outputName" value="ic_clipboard" />
+                            <entry key="sourceFile" value="C:\Users\Theseus\Desktop\clipboard.svg" />
                           </map>
                         </option>
                       </PersistentState>

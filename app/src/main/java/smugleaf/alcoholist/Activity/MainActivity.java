@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ListView listView;
     String[] listItem;
-    FloatingActionButton fab;
-    Switch firstSwitch;
-    Switch secondSwitch;
+    FloatingActionButton fab, fabPaste, fabQr, fabNfc;
+    boolean isFabOpen;
     NfcAdapter nfcAdapter;
-    TextView result;
+    TextView pasteResult, qrResult, nfcResult;
+    Switch firstSwitch, secondSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +49,14 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        result = findViewById(R.id.nfc_result);
+        pasteResult = findViewById(R.id.paste_result);
+        qrResult = findViewById(R.id.qr_result);
+        nfcResult = findViewById(R.id.nfc_result);
 
         setupListView();
         setupDrawerLayout();
         setupSwitches();
-        setupFloatingActionButton();
+        setupFloatingActionButtons();
         setupNfcAdapter();
     }
 
@@ -84,9 +86,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupFloatingActionButton() {
+    private void setupFloatingActionButtons() {
         fab = findViewById(R.id.fab);
+        fabPaste = findViewById(R.id.fabPaste);
+        fabQr = findViewById(R.id.fabQr);
+        fabNfc = findViewById(R.id.fabNfc);
+
         fab.setOnClickListener(fabClickListener);
+        fabPaste.setOnClickListener(fabClickListener);
+        fabQr.setOnClickListener(fabClickListener);
+        fabNfc.setOnClickListener(fabClickListener);
     }
 
     private void setupDrawerLayout() {
@@ -106,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
                 toast(adapter.getItem(position));
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isFabOpen) {
+            closeFabMenu();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 //    @Override
@@ -141,12 +159,80 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-            toast("Implement action");
 
-            Intent intent = new Intent(MainActivity.this, BarcodeCaptureActivity.class);
-            startActivityForResult(intent, 1);
+            switch (v.getId()) {
+                case R.id.fab:
+                    toggleFab();
+                    break;
+                case R.id.fabPaste:
+                    pasteFromClipboard();
+                    break;
+                case R.id.fabQr:
+                    launchQrReader();
+                    break;
+                case R.id.fabNfc:
+                    broadcastNfc();
+                    break;
+                default:
+                    toast("[FloatingActionButton ERROR]");
+                    break;
+            }
         }
     };
+
+    private void toggleFab() {
+        if (!isFabOpen) {
+            showFabMenu();
+        } else {
+            closeFabMenu();
+        }
+
+        // TODO: Implement material design response
+        // I'm thinking maybe start as a plus sign and rotate into the download icon while menu is open?
+    }
+
+    private void showFabMenu() {
+        isFabOpen = true;
+
+        // TODO: Stagger animations for material design
+        fabPaste.show();
+        fabQr.show();
+        fabNfc.show();
+    }
+
+    private void closeFabMenu() {
+        isFabOpen = false;
+
+        // TODO: Stagger animations for material design
+        fabPaste.hide();
+        fabQr.hide();
+        fabNfc.hide();
+    }
+
+    private void pasteFromClipboard() {
+        closeFabMenu();
+
+        // TODO: Grab clipboard
+        toast("Paste clipboard");
+        pasteResult.setText("Nothing pasted");
+    }
+
+    private void launchQrReader() {
+        toast("QR");
+        closeFabMenu();
+
+        // TODO: Check camera is available first. Currently it crashes on the emu.
+        Intent intent = new Intent(MainActivity.this, BarcodeCaptureActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    private void broadcastNfc() {
+        closeFabMenu();
+
+        // TODO: Grab clipboard
+        toast("NFC");
+        nfcResult.setText("No NFC detected");
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -155,9 +241,9 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     Barcode b = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     Point[] p = b.cornerPoints;
-                    result.setText(b.displayValue);
+                    qrResult.setText(b.displayValue);
                 } else {
-                    result.setText("NO BARCODE CAPTURED");
+                    qrResult.setText("NO BARCODE CAPTURED");
                 }
             } else {
                 toast("ERROR");
