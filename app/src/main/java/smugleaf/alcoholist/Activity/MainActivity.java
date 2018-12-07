@@ -79,14 +79,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//
-//        // TODO: This isn't being used regardless of CLEAR_TOP or SINGLE_TOP
-//        toast("onNewIntent");
-//        handleIntent(intent);
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        toast("onNewIntent");
+        handleIntent(intent);
+    }
 
 //    NdefRecord uriRecord = new NdefRecord(
 //            NdefRecord.TNF_ABSOLUTE_URI,
