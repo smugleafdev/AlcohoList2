@@ -2,16 +2,22 @@ package smugleaf.alcoholist.Activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +30,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import smugleaf.alcoholist.Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity;
 import smugleaf.alcoholist.R;
@@ -38,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     NfcAdapter nfcAdapter;
     TextView pasteResult, qrResult, nfcResult;
     Switch firstSwitch, secondSwitch;
+
+    PendingIntent pendingIntent;
+    IntentFilter[] writeTagFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +73,82 @@ public class MainActivity extends AppCompatActivity {
         setupSwitches();
         setupFloatingActionButtons();
         setupNfcAdapter();
+
+        if (getIntent() != null) {
+            handleIntent(getIntent());
+        }
     }
+
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//
+//        // TODO: This isn't being used regardless of CLEAR_TOP or SINGLE_TOP
+//        toast("onNewIntent");
+//        handleIntent(intent);
+//    }
+
+//    NdefRecord uriRecord = new NdefRecord(
+//            NdefRecord.TNF_ABSOLUTE_URI,
+//            "http://developer.android.com/index.html".getBytes(Charset.forName("US-ASCII")),
+//            new byte[0], new byte[0]);
 
     private void setupNfcAdapter() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (nfcAdapter == null) {
             toast("This device doesn't support NFC.");
+        } else {
+            pendingIntent = PendingIntent.getActivity(this, 0,
+                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+            IntentFilter discovery = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+            writeTagFilters = new IntentFilter[]{discovery};
+        }
+    }
+
+    private void handleIntent(Intent intent) {
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+//            toast("NDEF discovered");
+            Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (rawMessages != null) {
+                NdefMessage[] messages = new NdefMessage[rawMessages.length];
+
+//                toast("NFC data received. " + messages.toString());
+
+                for (int i = 0; i < rawMessages.length; i++) {
+                    messages[i] = (NdefMessage) rawMessages[i];
+//                    toast("Message " + i + ": " + rawMessages[i].toString());
+                }
+
+                for (NdefRecord r : messages[0].getRecords()) {
+                    if (r.getTnf() == NdefRecord.TNF_WELL_KNOWN) {
+                        if (Arrays.equals(r.getType(), NdefRecord.RTD_TEXT)) {
+                            byte[] payload = r.getPayload();
+                            boolean isUtf8 = (payload[0] & 0x080) == 0;
+                            int languageLength = payload[0] & 0x03F;
+                            int textLength = payload.length - 1 - languageLength;
+                            try {
+                                String languageCode = new String(payload, 1, languageLength, "US-ASCII");
+                                String payloadText = new String(payload, 1 + languageLength, textLength, isUtf8 ? "UTF-8" : "UTF-16");
+
+                                nfcResult.setText(payloadText);
+                            } catch (UnsupportedEncodingException e) {
+                                throw new AssertionError("UTF-8 is unknown");
+                            }
+                        }
+                    }
+                }
+
+//                NdefMessage msg = messages[0];
+//
+//                try {
+//                    String nfcText = new String(msg.getRecords()[0].getPayload(), "UTF-8");
+//                    nfcResult.setText(nfcText);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+            }
         }
     }
 
@@ -305,5 +387,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void toast(String string) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+        Log.d("toast", string);
     }
 }
