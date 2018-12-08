@@ -3,6 +3,8 @@ package smugleaf.alcoholist.Activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
@@ -321,7 +323,10 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Grab clipboard
         toast("Paste clipboard");
-        pasteResult.setText("Nothing pasted");
+
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = clipboardManager.getPrimaryClip();
+        pasteResult.setText(clip.getItemAt(0).getText().toString());
     }
 
     private void launchQrReader() {
