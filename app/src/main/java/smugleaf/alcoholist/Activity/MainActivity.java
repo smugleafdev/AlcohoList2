@@ -6,11 +6,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,12 +28,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-
-import smugleaf.alcoholist.Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity;
+import smugleaf.alcoholist.Nfc.NfcHandler;
 import smugleaf.alcoholist.R;
+import smugleaf.alcoholist.Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -87,16 +81,13 @@ public class MainActivity extends AppCompatActivity {
         handleIntent(intent);
     }
 
-//    NdefRecord uriRecord = new NdefRecord(
-//            NdefRecord.TNF_ABSOLUTE_URI,
-//            "http://developer.android.com/index.html".getBytes(Charset.forName("US-ASCII")),
-//            new byte[0], new byte[0]);
-
     private void setupNfcAdapter() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (nfcAdapter == null) {
             toast("This device doesn't support NFC.");
+        } else if (!nfcAdapter.isEnabled()) {
+            nfcResult.setText("NFC is disabled.");
         } else {
             pendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -107,47 +98,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-//            toast("NDEF discovered");
-            Parcelable[] rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+            NfcHandler nfcHandler = new NfcHandler(this);
 
-            if (rawMessages != null) {
-                NdefMessage[] messages = new NdefMessage[rawMessages.length];
+            // TODO: This is a lot of garbage testing code. Refactor eventually.
+            if (intent.getType().equals("text/plain")) {
+                nfcResult.setText(nfcHandler.readNfc(intent));
 
-//                toast("NFC data received. " + messages.toString());
-
-                for (int i = 0; i < rawMessages.length; i++) {
-                    messages[i] = (NdefMessage) rawMessages[i];
-//                    toast("Message " + i + ": " + rawMessages[i].toString());
-                }
-
-                for (NdefRecord r : messages[0].getRecords()) {
-                    if (r.getTnf() == NdefRecord.TNF_WELL_KNOWN) {
-                        if (Arrays.equals(r.getType(), NdefRecord.RTD_TEXT)) {
-                            byte[] payload = r.getPayload();
-                            boolean isUtf8 = (payload[0] & 0x080) == 0;
-                            int languageLength = payload[0] & 0x03F;
-                            int textLength = payload.length - 1 - languageLength;
-                            try {
-                                String languageCode = new String(payload, 1, languageLength, "US-ASCII");
-                                String payloadText = new String(payload, 1 + languageLength, textLength, isUtf8 ? "UTF-8" : "UTF-16");
-
-                                nfcResult.setText(payloadText);
-                            } catch (UnsupportedEncodingException e) {
-                                throw new AssertionError("UTF-8 is unknown");
-                            }
-                        }
-                    }
-                }
-
-//                NdefMessage msg = messages[0];
-//
-//                try {
-//                    String nfcText = new String(msg.getRecords()[0].getPayload(), "UTF-8");
-//                    nfcResult.setText(nfcText);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
+//                pasteResult.setText("BEWARE! ATTEMPTING WRITING TAG");
+//                nfcResult.setText(nfcHandler.writeToNfc(intent));
+            } else if (intent.getType().equals("application/smugleaf.alcoholist")) {
+                toast("Holy shit it has my app info!");
+                nfcResult.setText(nfcHandler.readNfc(intent));
+            } else {
+                pasteResult.setText("BEWARE! ATTEMPTING WRITING TAG");
+                nfcResult.setText(nfcHandler.writeToNfc(intent));
             }
+//        } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+//            writeToNfc(intent);
         }
     }
 
@@ -281,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.fabNfc:
                     broadcastNfc();
+//                    writeToNfc();
                     break;
                 default:
                     toast("[FloatingActionButton ERROR]");
@@ -297,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // TODO: Implement material design response
-        // I'm thinking maybe start as a plus sign and rotate into the download icon while menu is open?
+        // I'm thinking maybe start as a download sign and turn into the X cancel button?
     }
 
     private void showFabMenu() {
@@ -319,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
     private void pasteFromClipboard() {
         closeFabMenu();
 
-        // TODO: Grab clipboard
         toast("Paste clipboard");
         pasteResult.setText("Nothing pasted");
     }
@@ -336,9 +303,11 @@ public class MainActivity extends AppCompatActivity {
     private void broadcastNfc() {
         closeFabMenu();
 
-        // TODO: Grab clipboard
-        toast("NFC");
-        nfcResult.setText("No NFC detected");
+//        toast("NFC shit about to go down");
+        toast("You haven't implemented anything yet.");
+//        nfcResult.setText("No NFC detected");
+        NfcHandler nfcHandler = new NfcHandler(this);
+        // TODO: implement foreground dispatch shit here
     }
 
     @Override
