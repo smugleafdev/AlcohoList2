@@ -8,7 +8,9 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
+import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +36,7 @@ import smugleaf.alcoholist.Nfc.NfcHandler;
 import smugleaf.alcoholist.R;
 import smugleaf.alcoholist.Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback {
 
     DrawerLayout drawerLayout;
     ListView listView;
@@ -42,11 +44,17 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab, fabPaste, fabQr, fabNfc;
     boolean isFabOpen;
     NfcAdapter nfcAdapter;
+    NfcHandler nfcHandler;
     TextView pasteResult, qrResult, nfcResult;
     Switch firstSwitch, secondSwitch;
 
     PendingIntent pendingIntent;
     IntentFilter[] writeTagFilters;
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+        return nfcHandler.createNdefMessage();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +93,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupNfcAdapter() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcHandler = new NfcHandler(this);
+        nfcAdapter.setNdefPushMessageCallback(this, this);
 
         if (nfcAdapter == null) {
             toast("This device doesn't support NFC.");
         } else if (!nfcAdapter.isEnabled()) {
-            nfcResult.setText("NFC is disabled.");
+            toast("NFC is disabled.");
         } else {
             pendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -100,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            NfcHandler nfcHandler = new NfcHandler(this);
 
             // TODO: This is a lot of garbage testing code. Refactor eventually.
             if (intent.getType().equals("text/plain")) {
