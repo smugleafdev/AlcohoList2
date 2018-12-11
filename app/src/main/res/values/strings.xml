@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AlcohoList</string>
     <string name="action_settings">Settings</string>
+    <string name="action_write_nfc">Write to NFC tag</string>
 
     <string-array name="array_technology">
         <item>Android</item>

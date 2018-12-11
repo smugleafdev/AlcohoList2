@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        // TODO: Remove these eventually
         pasteResult = findViewById(R.id.paste_result);
         qrResult = findViewById(R.id.qr_result);
         nfcResult = findViewById(R.id.nfc_result);
@@ -92,15 +94,15 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     }
 
     private void setupNfcAdapter() {
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        nfcHandler = new NfcHandler(this);
-        nfcAdapter.setNdefPushMessageCallback(this, this);
-
         if (nfcAdapter == null) {
             toast("This device doesn't support NFC.");
         } else if (!nfcAdapter.isEnabled()) {
             toast("NFC is disabled.");
         } else {
+            nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+            nfcHandler = new NfcHandler(this);
+            nfcAdapter.setNdefPushMessageCallback(this, this);
+
             pendingIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
             IntentFilter discovery = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
@@ -213,12 +215,12 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -235,6 +237,9 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_write_nfc:
+                // TODO: Write to NFC now
                 return true;
         }
 

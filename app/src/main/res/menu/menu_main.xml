@@ -8,4 +8,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_write_nfc"
+        android:orderInCategory="100"
+        android:title="@string/action_write_nfc"
+        app:showAsAction="never" />
 </menu>
