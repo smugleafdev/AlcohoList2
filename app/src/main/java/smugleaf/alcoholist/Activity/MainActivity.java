@@ -33,6 +33,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import java.util.ArrayList;
+
+import smugleaf.alcoholist.List.CustomListAdapter;
+import smugleaf.alcoholist.List.ListItem;
 import smugleaf.alcoholist.Nfc.NfcHandler;
 import smugleaf.alcoholist.R;
 import smugleaf.alcoholist.Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity;
@@ -41,7 +45,8 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     DrawerLayout drawerLayout;
     ListView listView;
-    String[] listItem;
+//    String[] listItem;
+    CustomListAdapter listAdapter;
     FloatingActionButton fab, fabPaste, fabQr, fabNfc;
     boolean isFabOpen;
     NfcAdapter nfcAdapter;
@@ -193,17 +198,45 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     }
 
     private void setupListView() {
+
+        ArrayList<ListItem> itemList = new ArrayList<>();
+        itemList.add(new ListItem("copper_mug", "Moscow Mule", "", ""));
+        itemList.add(new ListItem("beer_pint", "fdsa", "", ""));
+        itemList.add(new ListItem("beer_ipa", "asdgfdgf", "", ""));
+        itemList.add(new ListItem("beer_snifter", "asawerewdf", "", ""));
+        itemList.add(new ListItem("beer_tulip", "asrwerewrawrawgtasgdf", "", ""));
+        itemList.add(new ListItem("copper_mug", "Moscow Mule", "", ""));
+        itemList.add(new ListItem("beer_pint", "fdsa", "", ""));
+        itemList.add(new ListItem("beer_ipa", "asdgfdgf", "", ""));
+        itemList.add(new ListItem("beer_snifter", "asawerewdf", "", ""));
+        itemList.add(new ListItem("beer_tulip", "asrwerewrawrawgtasgdf", "", ""));
+        itemList.add(new ListItem("copper_mug", "Moscow Mule", "", ""));
+        itemList.add(new ListItem("beer_pint", "fdsa", "", ""));
+        itemList.add(new ListItem("beer_ipa", "3", "", ""));
+        itemList.add(new ListItem("beer_snifter", "2", "", ""));
+        itemList.add(new ListItem("beer_tulip", "1", "", ""));
+
+        listAdapter = new CustomListAdapter(this, itemList);
         listView = findViewById(R.id.listView);
-        listItem = getResources().getStringArray(R.array.array_technology);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, listItem);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                toast(adapter.getItem(position));
-            }
-        });
+        listView.setAdapter(listAdapter);
+
+
+        // here
+
+//        ArrayList<ListItem> listItems = new ArrayList<ListItem>();
+
+
+
+//        listItem = getResources().getStringArray(R.array.array_technology);
+//        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1, android.R.id.text1, listItem);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                toast(adapter.getItem(position));
+//            }
+//        });
     }
 
     @Override
