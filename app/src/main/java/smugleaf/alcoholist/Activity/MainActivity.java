@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     DrawerLayout drawerLayout;
     ListView listView;
 //    String[] listItem;
+    // TODO: Convert ot RecyclerView?
     CustomListAdapter listAdapter;
     FloatingActionButton fab, fabPaste, fabQr, fabNfc;
     boolean isFabOpen;
@@ -56,11 +57,6 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     PendingIntent pendingIntent;
     IntentFilter[] writeTagFilters;
-
-    @Override
-    public NdefMessage createNdefMessage(NfcEvent event) {
-        return nfcHandler.createNdefMessage();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +92,11 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
         toast("onNewIntent");
         handleIntent(intent);
+    }
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent event) {
+        return nfcHandler.createNdefMessage();
     }
 
     private void setupNfcAdapter() {
@@ -200,21 +201,17 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     private void setupListView() {
 
         ArrayList<ListItem> itemList = new ArrayList<>();
-        itemList.add(new ListItem("copper_mug", "Moscow Mule", "", ""));
-        itemList.add(new ListItem("beer_pint", "fdsa", "", ""));
-        itemList.add(new ListItem("beer_ipa", "asdgfdgf", "", ""));
-        itemList.add(new ListItem("beer_snifter", "asawerewdf", "", ""));
-        itemList.add(new ListItem("beer_tulip", "asrwerewrawrawgtasgdf", "", ""));
-        itemList.add(new ListItem("copper_mug", "Moscow Mule", "", ""));
-        itemList.add(new ListItem("beer_pint", "fdsa", "", ""));
-        itemList.add(new ListItem("beer_ipa", "asdgfdgf", "", ""));
-        itemList.add(new ListItem("beer_snifter", "asawerewdf", "", ""));
-        itemList.add(new ListItem("beer_tulip", "asrwerewrawrawgtasgdf", "", ""));
-        itemList.add(new ListItem("copper_mug", "Moscow Mule", "", ""));
-        itemList.add(new ListItem("beer_pint", "fdsa", "", ""));
-        itemList.add(new ListItem("beer_ipa", "3", "", ""));
-        itemList.add(new ListItem("beer_snifter", "2", "", ""));
-        itemList.add(new ListItem("beer_tulip", "1", "", ""));
+        itemList.add(new ListItem("beer_tulip", "Bee Pollen Saison", "Mixed culture saison brewed with bee pollen", "7.1%, $6"));
+        itemList.add(new ListItem("beer_tulip", "Boysenberry Saison", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Dry Hopped Lager", "Lager double dry hopped with monroe hops", "6.8%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Brut IPA", "Triple dry hopped india pale ale", "7.3%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops", "6.8%, $6"));
+        itemList.add(new ListItem("beer_tulip", "Sour Saison", "Ale brewed with brettanomyces and lactobacillus", "6.3%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
+        itemList.add(new ListItem("beer_pilsner_footed", "Saint Arnold's Braggot", "Beer and mead hybrid brewed with colorado honey for Feast of St. Arnold", "9.7%, $7"));
+        itemList.add(new ListItem("beer_snifter", "Pecan Coffee Stout", "Ale brewed with pecans and coffee", "8.4%, $6"));
+        itemList.add(new ListItem("beer_snifter", "BBA Oatmeal Stout", "Imperial stout brewed with flaked oats and aged in a whiskey barrel", "8.7%, $7"));
 
         listAdapter = new CustomListAdapter(this, itemList);
         listView = findViewById(R.id.listView);

@@ -61,12 +61,18 @@ public class CustomListAdapter extends ArrayAdapter<ListItem> {
 
         ListItem item = list.get(position);
 
-        ImageView imageView = (ImageView) listItem.findViewById(R.id.item_icon);
+        ImageView imageView = listItem.findViewById(R.id.item_icon);
         imageView.setImageDrawable(ContextCompat.getDrawable(context, context.getResources().getIdentifier(item.getIcon(), "drawable", context.getPackageName())));
 //        imageView.setImageResource(activity.getResources().getIdentifier(item.getIcon(), "string", activity.getPackageName()));
 
-        TextView title = (TextView) listItem.findViewById(R.id.item_title);
+        TextView title = listItem.findViewById(R.id.item_title);
         title.setText(item.getTitle());
+
+        TextView description = listItem.findViewById(R.id.item_description);
+        description.setText(item.getDescription());
+
+        TextView price = listItem.findViewById(R.id.item_price);
+        price.setText(item.getPrice());
 
         return listItem;
     }
