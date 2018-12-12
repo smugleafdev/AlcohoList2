@@ -24,63 +24,64 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/paste_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Paste result: " />
+        <!--<TextView-->
+            <!--android:id="@+id/paste_label"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="Paste result: " />-->
 
-        <TextView
-            android:id="@+id/paste_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Nothing saved yet"
-            app:layout_constraintStart_toEndOf="@id/paste_label" />
+        <!--<TextView-->
+            <!--android:id="@+id/paste_result"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="Nothing saved yet"-->
+            <!--app:layout_constraintStart_toEndOf="@id/paste_label" />-->
 
-        <TextView
-            android:id="@+id/qr_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="QR result: "
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/paste_label" />
+        <!--<TextView-->
+            <!--android:id="@+id/qr_label"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="QR result: "-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/paste_label" />-->
 
-        <TextView
-            android:id="@+id/qr_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Nothing saved yet"
-            app:layout_constraintStart_toEndOf="@id/qr_label"
-            app:layout_constraintTop_toTopOf="@id/qr_label" />
+        <!--<TextView-->
+            <!--android:id="@+id/qr_result"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="Nothing saved yet"-->
+            <!--app:layout_constraintStart_toEndOf="@id/qr_label"-->
+            <!--app:layout_constraintTop_toTopOf="@id/qr_label" />-->
 
-        <TextView
-            android:id="@+id/nfc_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="NFC result: "
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/qr_label" />
+        <!--<TextView-->
+            <!--android:id="@+id/nfc_label"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="NFC result: "-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/qr_label" />-->
 
-        <TextView
-            android:id="@+id/nfc_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Nothing saved yet"
-            app:layout_constraintStart_toEndOf="@id/nfc_label"
-            app:layout_constraintTop_toTopOf="@id/nfc_label" />
+        <!--<TextView-->
+            <!--android:id="@+id/nfc_result"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:text="Nothing saved yet"-->
+            <!--app:layout_constraintStart_toEndOf="@id/nfc_label"-->
+            <!--app:layout_constraintTop_toTopOf="@id/nfc_label" />-->
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nfc_label" />
+             app:layout_constraintTop_toTopOf="parent"/>
+        <!--app:layout_constraintTop_toBottomOf="@id/nfc_label"-->
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabNfc"

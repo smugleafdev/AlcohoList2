@@ -45,16 +45,15 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     DrawerLayout drawerLayout;
     ListView listView;
-//    String[] listItem;
+    //    String[] listItem;
     // TODO: Convert ot RecyclerView?
     CustomListAdapter listAdapter;
     FloatingActionButton fab, fabPaste, fabQr, fabNfc;
     boolean isFabOpen;
-    boolean shouldUpdatePaste, shouldUpdateQr, shouldUpdateNfc;
     String updatePaste, updateQr, updateNfc;
     NfcAdapter nfcAdapter;
     NfcHandler nfcHandler;
-    TextView pasteResult, qrResult, nfcResult;
+//    TextView pasteResult, qrResult, nfcResult;
 
     Switch firstSwitch, secondSwitch;
 
@@ -78,20 +77,19 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         setTitle("Local Relic");
 
         // TODO: Remove these eventually
-        pasteResult = findViewById(R.id.paste_result);
-        qrResult = findViewById(R.id.qr_result);
-        nfcResult = findViewById(R.id.nfc_result);
-
+//        pasteResult = findViewById(R.id.paste_result);
+//        qrResult = findViewById(R.id.qr_result);
+//        nfcResult = findViewById(R.id.nfc_result);
 
         itemList = new ArrayList<>();
         itemList.add(new ListItem("beer_tulip", "Bee Pollen Saison", "Mixed culture saison brewed with bee pollen", "7.1%, $6"));
         itemList.add(new ListItem("beer_tulip", "Boysenberry Saison", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
         itemList.add(new ListItem("beer_ipa", "Dry Hopped Lager", "Lager double dry hopped with monroe hops", "6.8%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
+        itemList.add(new ListItem("beer_weizen", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
         itemList.add(new ListItem("beer_ipa", "Brut IPA", "Triple dry hopped india pale ale", "7.3%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops\n\nOh hey last line", "6.8%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops", "6.8%, $6"));
         itemList.add(new ListItem("beer_tulip", "Sour Saison", "Ale brewed with brettanomyces and lactobacillus", "6.3%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
+        itemList.add(new ListItem("wine_port", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
         itemList.add(new ListItem("beer_pilsner_footed", "Saint Arnold's Braggot", "Beer and mead hybrid brewed with colorado honey for Feast of St. Arnold", "9.7%, $7"));
         itemList.add(new ListItem("beer_snifter", "Pecan Coffee Stout", "Ale brewed with pecans and coffee", "8.4%, $6"));
         itemList.add(new ListItem("beer_snifter", "BBA Oatmeal Stout", "Imperial stout brewed with flaked oats and aged in a whiskey barrel", "8.7%, $7"));
@@ -143,16 +141,16 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
             // TODO: This is a lot of garbage testing code. Refactor eventually.
             if (intent.getType().equals("text/plain")) {
-                nfcResult.setText(nfcHandler.readNfc(intent));
-
-//                pasteResult.setText("BEWARE! ATTEMPTING WRITING TAG");
+//                nfcResult.setText(nfcHandler.readNfc(intent));
+                updateNfcResult(nfcHandler.readNfc(intent));
 //                nfcResult.setText(nfcHandler.writeToNfc(intent));
             } else if (intent.getType().equals("application/smugleaf.alcoholist")) {
                 toast("Holy shit it has my app info!");
-                nfcResult.setText(nfcHandler.readNfc(intent));
+//                nfcResult.setText(nfcHandler.readNfc(intent));
+                updateNfcResult(nfcHandler.readNfc(intent));
             } else {
-                pasteResult.setText("BEWARE! ATTEMPTING WRITING TAG");
-                nfcResult.setText(nfcHandler.writeToNfc(intent));
+//                nfcResult.setText(nfcHandler.writeToNfc(intent));
+                updateNfcResult(nfcHandler.writeToNfc(intent));
             }
 //        } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
 //            writeToNfc(intent);
@@ -165,9 +163,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toast("First switch on: " + isChecked);
-                //
-
-//                itemList.set(1, new ListItem("copper_mug", "NULE", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
+//                itemList.set(1, new ListItem("copper_mug", "Mule", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
 //                for (ListItem i : itemList) {
 //
 //                }
@@ -229,30 +225,11 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     }
 
     private void setupListView() {
-
-//        ArrayList<ListItem> itemList = new ArrayList<>();
-//        itemList.add(new ListItem("beer_tulip", "Bee Pollen Saison", "Mixed culture saison brewed with bee pollen", "7.1%, $6"));
-//        itemList.add(new ListItem("beer_tulip", "Boysenberry Saison", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
-//        itemList.add(new ListItem("beer_ipa", "Dry Hopped Lager", "Lager double dry hopped with monroe hops", "6.8%, $6"));
-//        itemList.add(new ListItem("beer_ipa", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
-//        itemList.add(new ListItem("beer_ipa", "Brut IPA", "Triple dry hopped india pale ale", "7.3%, $6"));
-//        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops\n\nOh hey last line", "6.8%, $6"));
-//        itemList.add(new ListItem("beer_tulip", "Sour Saison", "Ale brewed with brettanomyces and lactobacillus", "6.3%, $6"));
-//        itemList.add(new ListItem("beer_ipa", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
-//        itemList.add(new ListItem("beer_pilsner_footed", "Saint Arnold's Braggot", "Beer and mead hybrid brewed with colorado honey for Feast of St. Arnold", "9.7%, $7"));
-//        itemList.add(new ListItem("beer_snifter", "Pecan Coffee Stout", "Ale brewed with pecans and coffee", "8.4%, $6"));
-//        itemList.add(new ListItem("beer_snifter", "BBA Oatmeal Stout", "Imperial stout brewed with flaked oats and aged in a whiskey barrel", "8.7%, $7"));
-
         listAdapter = new CustomListAdapter(this, itemList);
         listView = findViewById(R.id.listView);
         listView.setAdapter(listAdapter);
 
-
-        // here
-
 //        ArrayList<ListItem> listItems = new ArrayList<ListItem>();
-
-
 
 //        listItem = getResources().getStringArray(R.array.array_technology);
 //        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -311,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         public void onClick(View v) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-
             switch (v.getId()) {
                 case R.id.fab:
                     toggleFab();
@@ -367,18 +343,30 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
         ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = clipboardManager.getPrimaryClip();
-        pasteResult.setText(clip.getItemAt(0).getText().toString());
-        updatePaste = clip.getItemAt(0).getText().toString();
-        shouldUpdatePaste = true;
+//        pasteResult.setText(clip.getItemAt(0).getText().toString());
+        updatePasteResult(clip.getItemAt(0).getText().toString());
+    }
+
+    private void updatePasteResult(String string) {
+        updatePaste = string;
+        invalidateOptionsMenu();
+    }
+
+    private void updateQrResult(String string) {
+        updateQr = string;
+        invalidateOptionsMenu();
+    }
+
+    private void updateNfcResult(String string) {
+        updateNfc = string;
         invalidateOptionsMenu();
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (shouldUpdatePaste) {
-            menu.findItem(R.id.filler_paste_result).setTitle("Paste result: " + updatePaste);
-            shouldUpdatePaste = false;
-        }
+        menu.findItem(R.id.filler_paste_result).setTitle("Paste result: " + updatePaste);
+        menu.findItem(R.id.filler_qr_result).setTitle("QR result: " + updateQr);
+        menu.findItem(R.id.filler_nfc_result).setTitle("NFC result: " + updateNfc);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -409,9 +397,11 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
                 if (data != null) {
                     Barcode b = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     Point[] p = b.cornerPoints;
-                    qrResult.setText(b.displayValue);
+//                    qrResult.setText(b.displayValue);
+                    updateQrResult(b.displayValue);
                 } else {
-                    qrResult.setText("NO BARCODE CAPTURED");
+//                    qrResult.setText("NO BARCODE CAPTURED");
+                    updateQrResult("NO BARCODE CAPTURED");
                 }
             } else {
                 toast("ERROR");
