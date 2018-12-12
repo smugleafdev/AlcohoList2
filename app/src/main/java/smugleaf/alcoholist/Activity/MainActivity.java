@@ -50,13 +50,18 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     CustomListAdapter listAdapter;
     FloatingActionButton fab, fabPaste, fabQr, fabNfc;
     boolean isFabOpen;
+    boolean shouldUpdatePaste, shouldUpdateQr, shouldUpdateNfc;
+    String updatePaste, updateQr, updateNfc;
     NfcAdapter nfcAdapter;
     NfcHandler nfcHandler;
     TextView pasteResult, qrResult, nfcResult;
+
     Switch firstSwitch, secondSwitch;
 
     PendingIntent pendingIntent;
     IntentFilter[] writeTagFilters;
+
+    ArrayList<ListItem> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +75,26 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        setTitle("Local Relic");
+
         // TODO: Remove these eventually
         pasteResult = findViewById(R.id.paste_result);
         qrResult = findViewById(R.id.qr_result);
         nfcResult = findViewById(R.id.nfc_result);
+
+
+        itemList = new ArrayList<>();
+        itemList.add(new ListItem("beer_tulip", "Bee Pollen Saison", "Mixed culture saison brewed with bee pollen", "7.1%, $6"));
+        itemList.add(new ListItem("beer_tulip", "Boysenberry Saison", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Dry Hopped Lager", "Lager double dry hopped with monroe hops", "6.8%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Brut IPA", "Triple dry hopped india pale ale", "7.3%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops\n\nOh hey last line", "6.8%, $6"));
+        itemList.add(new ListItem("beer_tulip", "Sour Saison", "Ale brewed with brettanomyces and lactobacillus", "6.3%, $6"));
+        itemList.add(new ListItem("beer_ipa", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
+        itemList.add(new ListItem("beer_pilsner_footed", "Saint Arnold's Braggot", "Beer and mead hybrid brewed with colorado honey for Feast of St. Arnold", "9.7%, $7"));
+        itemList.add(new ListItem("beer_snifter", "Pecan Coffee Stout", "Ale brewed with pecans and coffee", "8.4%, $6"));
+        itemList.add(new ListItem("beer_snifter", "BBA Oatmeal Stout", "Imperial stout brewed with flaked oats and aged in a whiskey barrel", "8.7%, $7"));
 
         setupListView();
         setupDrawerLayout();
@@ -100,12 +121,13 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     }
 
     private void setupNfcAdapter() {
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
         if (nfcAdapter == null) {
             toast("This device doesn't support NFC.");
         } else if (!nfcAdapter.isEnabled()) {
             toast("NFC is disabled.");
         } else {
-            nfcAdapter = NfcAdapter.getDefaultAdapter(this);
             nfcHandler = new NfcHandler(this);
             nfcAdapter.setNdefPushMessageCallback(this, this);
 
@@ -143,6 +165,14 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toast("First switch on: " + isChecked);
+                //
+
+//                itemList.set(1, new ListItem("copper_mug", "NULE", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
+//                for (ListItem i : itemList) {
+//
+//                }
+                listAdapter.setDisplayIcons(isChecked);
+                listAdapter.notifyDataSetChanged();
             }
         });
 
@@ -200,18 +230,18 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     private void setupListView() {
 
-        ArrayList<ListItem> itemList = new ArrayList<>();
-        itemList.add(new ListItem("beer_tulip", "Bee Pollen Saison", "Mixed culture saison brewed with bee pollen", "7.1%, $6"));
-        itemList.add(new ListItem("beer_tulip", "Boysenberry Saison", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Dry Hopped Lager", "Lager double dry hopped with monroe hops", "6.8%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Brut IPA", "Triple dry hopped india pale ale", "7.3%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops", "6.8%, $6"));
-        itemList.add(new ListItem("beer_tulip", "Sour Saison", "Ale brewed with brettanomyces and lactobacillus", "6.3%, $6"));
-        itemList.add(new ListItem("beer_ipa", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
-        itemList.add(new ListItem("beer_pilsner_footed", "Saint Arnold's Braggot", "Beer and mead hybrid brewed with colorado honey for Feast of St. Arnold", "9.7%, $7"));
-        itemList.add(new ListItem("beer_snifter", "Pecan Coffee Stout", "Ale brewed with pecans and coffee", "8.4%, $6"));
-        itemList.add(new ListItem("beer_snifter", "BBA Oatmeal Stout", "Imperial stout brewed with flaked oats and aged in a whiskey barrel", "8.7%, $7"));
+//        ArrayList<ListItem> itemList = new ArrayList<>();
+//        itemList.add(new ListItem("beer_tulip", "Bee Pollen Saison", "Mixed culture saison brewed with bee pollen", "7.1%, $6"));
+//        itemList.add(new ListItem("beer_tulip", "Boysenberry Saison", "Mixed culture saison brewed with boysenberries", "7.0%, $6"));
+//        itemList.add(new ListItem("beer_ipa", "Dry Hopped Lager", "Lager double dry hopped with monroe hops", "6.8%, $6"));
+//        itemList.add(new ListItem("beer_ipa", "Rye Pale Ale", "Pale ale brewed with rye", "8.5%, $6"));
+//        itemList.add(new ListItem("beer_ipa", "Brut IPA", "Triple dry hopped india pale ale", "7.3%, $6"));
+//        itemList.add(new ListItem("beer_ipa", "Hazy Pacific Gem IPA", "Hazy but west coast style IPA brewed with one percent New Zealand grown pacific gem hops\n\nOh hey last line", "6.8%, $6"));
+//        itemList.add(new ListItem("beer_tulip", "Sour Saison", "Ale brewed with brettanomyces and lactobacillus", "6.3%, $6"));
+//        itemList.add(new ListItem("beer_ipa", "Calypso Brett", "India pale ale brewed with one hundred percent calypso hops and fermented with brettanomyces", "8.2%, $7"));
+//        itemList.add(new ListItem("beer_pilsner_footed", "Saint Arnold's Braggot", "Beer and mead hybrid brewed with colorado honey for Feast of St. Arnold", "9.7%, $7"));
+//        itemList.add(new ListItem("beer_snifter", "Pecan Coffee Stout", "Ale brewed with pecans and coffee", "8.4%, $6"));
+//        itemList.add(new ListItem("beer_snifter", "BBA Oatmeal Stout", "Imperial stout brewed with flaked oats and aged in a whiskey barrel", "8.7%, $7"));
 
         listAdapter = new CustomListAdapter(this, itemList);
         listView = findViewById(R.id.listView);
@@ -338,6 +368,19 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = clipboardManager.getPrimaryClip();
         pasteResult.setText(clip.getItemAt(0).getText().toString());
+        updatePaste = clip.getItemAt(0).getText().toString();
+        shouldUpdatePaste = true;
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (shouldUpdatePaste) {
+            menu.findItem(R.id.filler_paste_result).setTitle("Paste result: " + updatePaste);
+            shouldUpdatePaste = false;
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void launchQrReader() {

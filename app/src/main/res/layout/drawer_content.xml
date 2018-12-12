@@ -35,7 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:padding="8dp"
-        android:text="Toggle 1" />
+        android:text="Show Icons"
+        android:checked="true"/>
 
     <Switch
         android:id="@+id/toggle_second"

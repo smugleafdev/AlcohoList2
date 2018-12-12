@@ -5,13 +5,33 @@
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_write_nfc"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         android:title="@string/action_write_nfc"
+        app:showAsAction="never" />
+
+    <!--TODO: Add share option. Unsure if writing to a tag should be included there. Probably not.-->
+
+    <item
+        android:id="@+id/filler_paste_result"
+        android:orderInCategory="3"
+        android:title="Paste result"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filler_qr_result"
+        android:orderInCategory="4"
+        android:title="QR result"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/filler_nfc_result"
+        android:orderInCategory="5"
+        android:title="NFC result"
         app:showAsAction="never" />
 </menu>

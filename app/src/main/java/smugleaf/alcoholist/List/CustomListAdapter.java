@@ -22,11 +22,18 @@ public class CustomListAdapter extends ArrayAdapter<ListItem> {
     private Context context;
     private ArrayList<ListItem> list;// = new ArrayList<>();
 
+    public void setDisplayIcons(boolean displayIcons) {
+        this.displayIcons = displayIcons;
+    }
+
+    public boolean displayIcons;
+
     public CustomListAdapter(Context context, ArrayList<ListItem> list) {
         super(context, 0, list);
         this.context = context;
 //        this.activity = activity;
         this.list = list;
+        displayIcons = true;
     }
 
     @Override
@@ -64,6 +71,11 @@ public class CustomListAdapter extends ArrayAdapter<ListItem> {
         ImageView imageView = listItem.findViewById(R.id.item_icon);
         imageView.setImageDrawable(ContextCompat.getDrawable(context, context.getResources().getIdentifier(item.getIcon(), "drawable", context.getPackageName())));
 //        imageView.setImageResource(activity.getResources().getIdentifier(item.getIcon(), "string", activity.getPackageName()));
+        if (displayIcons) {
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
 
         TextView title = listItem.findViewById(R.id.item_title);
         title.setText(item.getTitle());
