@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@color/blackground">
 
+
+    <!--TODO: Space better. Currently icons are squished vertically-->
     <ImageView
         android:id="@+id/item_icon"
         android:layout_width="@dimen/icon_size"

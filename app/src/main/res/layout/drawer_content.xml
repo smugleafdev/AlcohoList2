@@ -29,6 +29,7 @@
 
     </LinearLayout>
 
+    <!--TODO: Add icons next to settings options for polish-->
     <Switch
         android:id="@+id/toggle_first"
         android:layout_width="match_parent"
