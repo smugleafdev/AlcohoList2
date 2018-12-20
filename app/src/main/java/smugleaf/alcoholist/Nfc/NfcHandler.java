@@ -36,7 +36,7 @@ public class NfcHandler {
                     byte[] payload = r.getPayload();
                     try {
                         String payloadText = new String(payload, 0, payload.length, "UTF-8");
-                        return "TNF_MIME_MEDIA: " + payloadText;
+                        return payloadText;
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                         return "Read error";
@@ -48,8 +48,8 @@ public class NfcHandler {
         return "Read failed, nothing happened";
     }
 
-    public String writeToNfc(Intent intent) {
-        NdefMessage message = createNdefMessage();
+    public String writeToNfc(Intent intent, String sheetUrl) {
+        NdefMessage message = createNdefMessage(sheetUrl);
 
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag != null) {
@@ -80,9 +80,14 @@ public class NfcHandler {
         }
     }
 
-    public NdefMessage createNdefMessage() {
-        // Replace with pulling URL from shared prefs eventually
-        String text = ("Beam me up, Android!");
+    public NdefMessage createNdefMessage(String url) {
+//        String text = "https://docs.google.com/spreadsheets/d/1W4AaC49V-h49RvnCT5DkpEC7274Q0tPjcPKmKLvk19U/edit?usp=sharing";
+        // TODO: Fix this so it trims the above URL into just the keyID, hopefully cleanly with REGEX!
+//        if (url.contains("docs.google.com")) {
+//            url.
+//            url = url.replaceAll("/spreadsheets/d/([a-zA-Z0-9-_]+)", "");
+//        }
+        String text = "1W4AaC49V-h49RvnCT5DkpEC7274Q0tPjcPKmKLvk19U";
 
         // Record launches Play Store if app is not installed
         NdefRecord appRecord = NdefRecord.createApplicationRecord(context.getPackageName());

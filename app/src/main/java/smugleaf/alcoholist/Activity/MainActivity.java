@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     ArrayList<ListItem> itemList;
 
+    boolean isNfcWritingEnabled;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        SharedPreferences prefs = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
@@ -110,9 +112,28 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         }
     }
 
+    public void onPause() {
+        super.onPause();
+
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(this);
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+
+        if (nfcAdapter != null) {
+            if (isNfcWritingEnabled) {
+                nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+            }
+        }
+    }
+
     private void receivedString(String string) {
         sheet = string;
         sheet = jsonHelper.parseUrl(sheet);
+        toast("Sheet read: " + sheet);
         if (!sheet.isEmpty()) {
             loadMenu();
         }
@@ -193,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
-        return nfcHandler.createNdefMessage();
+        return nfcHandler.createNdefMessage(sheet);
     }
 
     private void setupNfcAdapter() {
@@ -215,22 +236,20 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     private void handleIntent(Intent intent) {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-
-            // TODO: This is a lot of garbage testing code. Refactor eventually.
-            if (intent.getType().equals("text/plain")) {
-//                nfcResult.setText(nfcHandler.readNfc(intent));
-                updateNfcResult(nfcHandler.readNfc(intent));
-//                nfcResult.setText(nfcHandler.writeToNfc(intent));
-            } else if (intent.getType().equals("application/smugleaf.alcoholist")) {
-                toast("Holy shit it has my app info!");
-//                nfcResult.setText(nfcHandler.readNfc(intent));
-                updateNfcResult(nfcHandler.readNfc(intent));
+            if (isNfcWritingEnabled) {
+                isNfcWritingEnabled = false;
+                updateNfcResult(nfcHandler.writeToNfc(intent, sheet));
             } else {
-//                nfcResult.setText(nfcHandler.writeToNfc(intent));
-                updateNfcResult(nfcHandler.writeToNfc(intent));
+                // TODO: This is a lot of garbage testing code. Refactor eventually.
+                if (intent.getType().equals("text/plain")) {
+                    updateNfcResult(nfcHandler.readNfc(intent));
+                } else if (intent.getType().equals("application/smugleaf.alcoholist")) {
+                    toast("Holy shit it has my app info!");
+                    String nfcResult = nfcHandler.readNfc(intent);
+                    updateNfcResult(nfcResult);
+                    receivedString(nfcResult);
+                }
             }
-//        } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-//            writeToNfc(intent);
         }
     }
 
@@ -264,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         fab = findViewById(R.id.fab);
         fabPaste = findViewById(R.id.fabPaste);
         fabQr = findViewById(R.id.fabQr);
+        // TODO: Disable button if NFC not found.
+        // Grey out completely if it comes up as not in the hardware at all
+        // Grey out or change color if disabled and include a message and send user to enable it
         fabNfc = findViewById(R.id.fabNfc);
 
         fab.setOnClickListener(fabClickListener);
@@ -349,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.action_write_nfc:
-                // TODO: Write to NFC now
+                broadcastNfc();
                 return true;
         }
 
@@ -372,8 +394,9 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
                     launchQrReader();
                     break;
                 case R.id.fabNfc:
-                    broadcastNfc();
-//                    writeToNfc();
+                    // TODO: Implement placebo screen for reading NFC
+                    toast("You haven't implemented anything yet.");
+                    closeFabMenu();
                     break;
                 default:
                     toast("[FloatingActionButton ERROR]");
@@ -455,13 +478,9 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
     }
 
     private void broadcastNfc() {
-        closeFabMenu();
+//        closeFabMenu();
 
-//        toast("NFC shit about to go down");
-        toast("You haven't implemented anything yet.");
-//        nfcResult.setText("No NFC detected");
-        NfcHandler nfcHandler = new NfcHandler(this);
-        // TODO: implement foreground dispatch shit here
+        isNfcWritingEnabled = true;
     }
 
     @Override

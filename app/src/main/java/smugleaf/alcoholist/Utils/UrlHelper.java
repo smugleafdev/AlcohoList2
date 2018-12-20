@@ -16,25 +16,30 @@ public class UrlHelper {
     }
 
     public String parseUrl(String link) {
-        try {
-            URL url = new URL(link);
 
-            if (url.toString().isEmpty()) {
-                toast("Empty URL");
-                return "";
-            } else if (url.getAuthority().contains("docs.google.com")) {
-                link = url.getPath();
-                link = link.replace("/spreadsheets/d/", "");
-                link = link.replace("/edit", "");
-            } else {
-                toast("Invalid URL");
+        // TODO: Adding this if messes with a lot of the logic below. Take another look at it.
+        if (link.contains("docs.google.com")) {
+            try {
+                URL url = new URL(link);
+
+                if (url.toString().isEmpty()) {
+                    toast("Empty URL");
+                    return "";
+                } else if (url.getAuthority().contains("docs.google.com")) {
+                    link = url.getPath();
+                    link = link.replace("/spreadsheets/d/", "");
+                    link = link.replace("/edit", "");
+                } else {
+                    toast("Invalid URL");
+                    return "";
+                }
+            } catch (MalformedURLException e) {
+                toast("MalformedURLException");
+                e.printStackTrace();
                 return "";
             }
-        } catch (MalformedURLException e) {
-            toast("MalformedURLException");
-            e.printStackTrace();
-            return "";
         }
+
         return "https://spreadsheets.google.com/tq?key=" + link;
     }
 
