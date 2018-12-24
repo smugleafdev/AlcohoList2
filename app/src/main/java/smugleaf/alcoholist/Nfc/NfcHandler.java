@@ -9,6 +9,7 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -73,6 +74,7 @@ public class NfcHandler {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.d("nfc bitches", "broked");
                 return "Error, tag not written";
             }
         } else {
@@ -81,20 +83,21 @@ public class NfcHandler {
     }
 
     public NdefMessage createNdefMessage(String url) {
-//        String text = "https://docs.google.com/spreadsheets/d/1W4AaC49V-h49RvnCT5DkpEC7274Q0tPjcPKmKLvk19U/edit?usp=sharing";
+        String text = "https://docs.google.com/spreadsheets/d/1W4AaC49V-h49RvnCT5DkpEC7274Q0tPjcPKmKLvk19U/edit?usp=sharing";
         // TODO: Fix this so it trims the above URL into just the keyID, hopefully cleanly with REGEX!
 //        if (url.contains("docs.google.com")) {
 //            url.
 //            url = url.replaceAll("/spreadsheets/d/([a-zA-Z0-9-_]+)", "");
 //        }
-        String text = "1W4AaC49V-h49RvnCT5DkpEC7274Q0tPjcPKmKLvk19U";
+//        String text = "1W4AaC49V-h49RvnCT5DkpEC7274Q0tPjcPKmKLvk19U";
 
         // Record launches Play Store if app is not installed
         NdefRecord appRecord = NdefRecord.createApplicationRecord(context.getPackageName());
         // Record with data URL, hopefully
-        NdefRecord relayRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
-                new String("application/" + context.getPackageName()).getBytes(Charset.forName("US-ASCII")),
-                null, text.getBytes());
+//        NdefRecord relayRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, new String("application/" + context.getPackageName()).getBytes(Charset.forName("US-ASCII")), null, text.getBytes());
+
+//        NdefRecord relayRecord = NdefRecord.createExternal(context.getPackageName(), "appurl", text.getBytes());
+        NdefRecord relayRecord = NdefRecord.createUri(text);
 
         return new NdefMessage(new NdefRecord[] {relayRecord, appRecord});
     }

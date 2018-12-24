@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        setTitle("Local Relic");
+//        setTitle("Local Relic");
 
         // TODO: Remove these eventually
 //        pasteResult = findViewById(R.id.paste_result);
@@ -148,12 +148,14 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     private void loadMenu() {
         if (isNetworkAvailable()) {
-            new DownloadSheet(new AsyncResult() {
-                @Override
-                public void onResult(JSONObject object) {
-                    processJson(object);
-                }
-            }).execute(sheet);
+//            if (!sheet.equals(null)) {
+//                new DownloadSheet(new AsyncResult() {
+//                    @Override
+//                    public void onResult(JSONObject object) {
+//                        processJson(object);
+//                    }
+//                }).execute(sheet);
+//            }
         } else {
             toast("No network detected.");
         }
@@ -248,7 +250,25 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
                     String nfcResult = nfcHandler.readNfc(intent);
                     updateNfcResult(nfcResult);
                     receivedString(nfcResult);
+                } else {
+                    toast("womp");
+                    String nfcResult = nfcHandler.readNfc(intent);
+                    updateNfcResult(nfcResult);
+                    receivedString(nfcResult);
                 }
+            }
+        } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+            toast("fuck");
+        } else if (!intent.equals(null)){
+            toast("what the fuck");
+            if (isNfcWritingEnabled) {
+                isNfcWritingEnabled = false;
+                updateNfcResult(nfcHandler.writeToNfc(intent, sheet));
+            } else {
+                    //toast("womp");
+                    String nfcResult = nfcHandler.readNfc(intent);
+                    updateNfcResult(nfcResult);
+                    receivedString(nfcResult);
             }
         }
     }
