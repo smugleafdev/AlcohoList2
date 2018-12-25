@@ -45,6 +45,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="application/smugleaf.alcoholist" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="https" android:host="docs.google.com"/>
+            </intent-filter>
         </activity>
         <activity android:name=".Varvet.BarcodeReaderSample.Barcode.BarcodeCaptureActivity"/>
     </application>

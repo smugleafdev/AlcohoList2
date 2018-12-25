@@ -148,14 +148,14 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 
     private void loadMenu() {
         if (isNetworkAvailable()) {
-//            if (!sheet.equals(null)) {
-//                new DownloadSheet(new AsyncResult() {
-//                    @Override
-//                    public void onResult(JSONObject object) {
-//                        processJson(object);
-//                    }
-//                }).execute(sheet);
-//            }
+            if (!sheet.equals(null)) {
+                new DownloadSheet(new AsyncResult() {
+                    @Override
+                    public void onResult(JSONObject object) {
+                        processJson(object);
+                    }
+                }).execute(sheet);
+            }
         } else {
             toast("No network detected.");
         }
@@ -243,32 +243,19 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
                 updateNfcResult(nfcHandler.writeToNfc(intent, sheet));
             } else {
                 // TODO: This is a lot of garbage testing code. Refactor eventually.
-                if (intent.getType().equals("text/plain")) {
+                if (null != intent.getType() && intent.getType().equals("text/plain")) {
                     updateNfcResult(nfcHandler.readNfc(intent));
-                } else if (intent.getType().equals("application/smugleaf.alcoholist")) {
+                } else if (null != intent.getType() && intent.getType().equals("application/smugleaf.alcoholist")) {
                     toast("Holy shit it has my app info!");
                     String nfcResult = nfcHandler.readNfc(intent);
                     updateNfcResult(nfcResult);
                     receivedString(nfcResult);
-                } else {
+                } else if (intent.getData().getHost().equals("docs.google.com")) {
                     toast("womp");
                     String nfcResult = nfcHandler.readNfc(intent);
                     updateNfcResult(nfcResult);
                     receivedString(nfcResult);
                 }
-            }
-        } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            toast("fuck");
-        } else if (!intent.equals(null)){
-            toast("what the fuck");
-            if (isNfcWritingEnabled) {
-                isNfcWritingEnabled = false;
-                updateNfcResult(nfcHandler.writeToNfc(intent, sheet));
-            } else {
-                    //toast("womp");
-                    String nfcResult = nfcHandler.readNfc(intent);
-                    updateNfcResult(nfcResult);
-                    receivedString(nfcResult);
             }
         }
     }
