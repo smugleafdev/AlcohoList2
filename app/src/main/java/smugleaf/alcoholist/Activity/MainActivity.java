@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Create
 //    private static final String PREFERENCES_FILE = "preferences";
 //    private static final String SHEET_URL = "sheet";
 //    private static final String JSON_STRING = "json";
-
+//
     String sheet;
     UrlHelper jsonHelper;
 
